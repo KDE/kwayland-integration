@@ -64,16 +64,17 @@ void WindowEffects::setupKWaylandIntegration()
         [this, registry] (quint32 name, quint32 version) {
             m_waylandBlurManager = registry->createBlurManager(name, version, this);
             m_blurSupported = true;
+            
+            connect(m_waylandBlurManager, &BlurManager::removed, this,
+                [this, registry] () {
+                    m_waylandBlurManager->deleteLater();
+                    m_waylandBlurManager = nullptr;
+                    m_blurSupported = false;
+                }
+            );
         }
     );
-    connect(registry, &Registry::blurRemoved, this,
-        [this, registry] (quint32 name) {
-            Q_UNUSED(name)
-            m_waylandBlurManager->deleteLater();
-            m_waylandBlurManager = nullptr;
-            m_blurSupported = false;
-        }
-    );
+
     registry->setup();
     m_waylandConnection->roundtrip();
 }
