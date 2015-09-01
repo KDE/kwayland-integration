@@ -70,15 +70,15 @@ void WindowEffects::setupKWaylandIntegration()
         }
     );
     registry->setup();
+    m_waylandConnection->roundtrip();
 }
 
 bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
 {
     switch (effect) {
-    //TODO: implement BackgroundContrast
-    //FIXME: isEffectAvailable gets asked for before blurAnnounced is emitted;
+    //TODO: implement BackgroundContrast, using m_blurSupported for now
     case KWindowEffects::BackgroundContrast:
-        return true;
+        return m_blurSupported;
     case KWindowEffects::BlurBehind:
         return m_blurSupported;
     default:
