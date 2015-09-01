@@ -66,7 +66,7 @@ void WindowEffects::setupKWaylandIntegration()
             m_blurSupported = true;
             
             connect(m_waylandBlurManager, &BlurManager::removed, this,
-                [this, registry] () {
+                [this] () {
                     m_waylandBlurManager->deleteLater();
                     m_waylandBlurManager = nullptr;
                     m_blurSupported = false;
