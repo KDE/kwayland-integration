@@ -33,11 +33,11 @@
 #include <KWayland/Client/region.h>
 
 WindowEffects::WindowEffects()
-    : KWindowEffectsPrivate(),
-      QObject(0),
-      m_waylandConnection(0),
-      m_waylandBlurManager(0),
-      m_waylandCompositor(0),
+    : QObject(),
+      KWindowEffectsPrivate(),
+      m_waylandConnection(nullptr),
+      m_waylandBlurManager(nullptr),
+      m_waylandCompositor(nullptr),
       m_blurSupported(false)
 {
     setupKWaylandIntegration();
@@ -48,9 +48,6 @@ WindowEffects::~WindowEffects()
 
 void WindowEffects::setupKWaylandIntegration()
 {
-    if (!QGuiApplication::platformName().startsWith(QLatin1String("wayland"), Qt::CaseInsensitive)) {
-        return;
-    }
     using namespace KWayland::Client;
     m_waylandConnection = ConnectionThread::fromApplication(this);
     if (!m_waylandConnection) {
@@ -67,6 +64,14 @@ void WindowEffects::setupKWaylandIntegration()
         [this, registry] (quint32 name, quint32 version) {
             m_waylandBlurManager = registry->createBlurManager(name, version, this);
             m_blurSupported = true;
+        }
+    );
+    connect(registry, &Registry::blurRemoved, this,
+        [this, registry] (quint32 name) {
+            Q_UNUSED(name)
+            m_waylandBlurManager->deleteLater();
+            m_waylandBlurManager = nullptr;
+            m_blurSupported = false;
         }
     );
     registry->setup();
@@ -88,33 +93,40 @@ bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
 
 void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset)
 {
-    
+    Q_UNUSED(id)
+    Q_UNUSED(location)
+    Q_UNUSED(offset)
 }
 
 void WindowEffects::slideWindow(QWidget *widget, KWindowEffects::SlideFromLocation location)
 {
-    
+    Q_UNUSED(widget)
+    Q_UNUSED(location)
 }
 
 QList<QSize> WindowEffects::windowSizes(const QList<WId> &ids)
 {
+    Q_UNUSED(ids)
     QList<QSize> sizes;
     return sizes;
 }
 
 void WindowEffects::presentWindows(WId controller, const QList<WId> &ids)
 {
-    
+    Q_UNUSED(controller)
+    Q_UNUSED(ids)
 }
 
 void WindowEffects::presentWindows(WId controller, int desktop)
 {
-    
+    Q_UNUSED(controller)
+    Q_UNUSED(desktop)
 }
 
 void WindowEffects::highlightWindows(WId controller, const QList<WId> &ids)
 {
-    
+    Q_UNUSED(controller)
+    Q_UNUSED(ids)
 }
 
 void WindowEffects::enableBlurBehind(WId window, bool enable, const QRegion &region)
@@ -126,7 +138,7 @@ void WindowEffects::enableBlurBehind(WId window, bool enable, const QRegion &reg
     if (surface) {
         if (enable) {
             auto blur = m_waylandBlurManager->createBlur(surface, surface);
-            blur->setRegion(*m_waylandCompositor->createRegion(region));
+            blur->setRegion(m_waylandCompositor->createRegion(region, nullptr));
             blur->commit();
         } else {
             m_waylandBlurManager->removeBlur(surface);
@@ -139,12 +151,17 @@ void WindowEffects::enableBlurBehind(WId window, bool enable, const QRegion &reg
 
 void WindowEffects::enableBackgroundContrast(WId window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
 {
-    
+    Q_UNUSED(window)
+    Q_UNUSED(enable)
+    Q_UNUSED(contrast)
+    Q_UNUSED(intensity)
+    Q_UNUSED(saturation)
+    Q_UNUSED(region)
 }
 
 void WindowEffects::markAsDashboard(WId window)
 {
-    
+    Q_UNUSED(window)
 }
 
 
