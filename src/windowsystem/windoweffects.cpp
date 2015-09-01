@@ -124,9 +124,13 @@ void WindowEffects::enableBlurBehind(WId window, bool enable, const QRegion &reg
     }
     KWayland::Client::Surface *surface = KWayland::Client::Surface::fromQtWinId(window);
     if (surface) {
-        auto blur = m_waylandBlurManager->createBlur(surface, surface);
-        blur->setRegion(*m_waylandCompositor->createRegion(region));
-        blur->commit();
+        if (enable) {
+            auto blur = m_waylandBlurManager->createBlur(surface, surface);
+            blur->setRegion(*m_waylandCompositor->createRegion(region));
+            blur->commit();
+        } else {
+            m_waylandBlurManager->removeBlur(surface);
+        }
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
         m_waylandConnection->flush();
