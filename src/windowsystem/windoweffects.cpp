@@ -21,12 +21,8 @@
 
 #include "windoweffects.h"
 
-#include <QDebug>
-#include <QGuiApplication>
-
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/registry.h>
-#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/blur.h>
@@ -37,8 +33,7 @@ WindowEffects::WindowEffects()
       KWindowEffectsPrivate(),
       m_waylandConnection(nullptr),
       m_waylandBlurManager(nullptr),
-      m_waylandCompositor(nullptr),
-      m_blurSupported(false)
+      m_waylandCompositor(nullptr)
 {
     setupKWaylandIntegration();
 }
@@ -63,13 +58,11 @@ void WindowEffects::setupKWaylandIntegration()
     connect(registry, &Registry::blurAnnounced, this,
         [this, registry] (quint32 name, quint32 version) {
             m_waylandBlurManager = registry->createBlurManager(name, version, this);
-            m_blurSupported = true;
-            
+
             connect(m_waylandBlurManager, &BlurManager::removed, this,
                 [this] () {
                     m_waylandBlurManager->deleteLater();
                     m_waylandBlurManager = nullptr;
-                    m_blurSupported = false;
                 }
             );
         }
@@ -82,11 +75,11 @@ void WindowEffects::setupKWaylandIntegration()
 bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
 {
     switch (effect) {
-    //TODO: implement BackgroundContrast, using m_blurSupported for now
+    //TODO: implement BackgroundContrast, using blur instead for now
     case KWindowEffects::BackgroundContrast:
-        return m_blurSupported;
+        return m_waylandBlurManager != nullptr;
     case KWindowEffects::BlurBehind:
-        return m_blurSupported;
+        return m_waylandBlurManager != nullptr;
     default:
         return false;
     }

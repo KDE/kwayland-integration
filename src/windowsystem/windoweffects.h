@@ -27,7 +27,6 @@ namespace KWayland
 {
     namespace Client
     {
-        class PlasmaShell;
         class BlurManager;
         class Compositor;
         class ConnectionThread;
@@ -38,25 +37,23 @@ class WindowEffects : public QObject, public KWindowEffectsPrivate
 {
 public:
     explicit WindowEffects();
-    virtual ~WindowEffects();
+    ~WindowEffects();
     void setupKWaylandIntegration();
-    virtual bool isEffectAvailable(KWindowEffects::Effect effect);
-    virtual void slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset);
-    virtual void slideWindow(QWidget *widget, KWindowEffects::SlideFromLocation location);
-    virtual QList<QSize> windowSizes(const QList<WId> &ids);
-    virtual void presentWindows(WId controller, const QList<WId> &ids);
-    virtual void presentWindows(WId controller, int desktop = NET::OnAllDesktops);
-    virtual void highlightWindows(WId controller, const QList<WId> &ids);
-    virtual void enableBlurBehind(WId window, bool enable = true, const QRegion &region = QRegion());
-    virtual void enableBackgroundContrast(WId window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion());
-    virtual void markAsDashboard(WId window);
+    bool isEffectAvailable(KWindowEffects::Effect effect) override;
+    void slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset) override;
+    void slideWindow(QWidget *widget, KWindowEffects::SlideFromLocation location) override;
+    QList<QSize> windowSizes(const QList<WId> &ids) override;
+    void presentWindows(WId controller, const QList<WId> &ids) override;
+    void presentWindows(WId controller, int desktop = NET::OnAllDesktops) override;
+    void highlightWindows(WId controller, const QList<WId> &ids) override;
+    void enableBlurBehind(WId window, bool enable = true, const QRegion &region = QRegion()) override;
+    void enableBackgroundContrast(WId window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion()) override;
+    void markAsDashboard(WId window) override;
 
 private:
     KWayland::Client::ConnectionThread *m_waylandConnection;
     KWayland::Client::BlurManager *m_waylandBlurManager;
     KWayland::Client::Compositor *m_waylandCompositor;
-
-    bool m_blurSupported : 1;
 };
 
 #endif
