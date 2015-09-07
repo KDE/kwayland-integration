@@ -20,9 +20,14 @@
  */
 
 #include "windoweffects.h"
+#include "waylandintegration.h"
+
+#include <QDebug>
 
 #include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/plasmawindowmanagement.h>
 #include <KWayland/Client/registry.h>
+#include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/blur.h>
@@ -36,50 +41,15 @@ WindowEffects::WindowEffects()
       m_waylandBlurManager(nullptr),
       m_waylandCompositor(nullptr)
 {
-    setupKWaylandIntegration();
+    m_waylandConnection = WaylandIntegration::self()->waylandConnection();
+    m_waylandBlurManager = WaylandIntegration::self()->waylandBlurManager();
+    m_waylandContrastManager = WaylandIntegration::self()->waylandContrastManager();
+    m_waylandCompositor = WaylandIntegration::self()->waylandCompositor();
+   
 }
 
 WindowEffects::~WindowEffects()
 {}
-
-void WindowEffects::setupKWaylandIntegration()
-{
-    using namespace KWayland::Client;
-    m_waylandConnection = ConnectionThread::fromApplication(this);
-    if (!m_waylandConnection) {
-        return;
-    }
-    Registry *registry = new Registry(this);
-    registry->create(m_waylandConnection);
-    m_waylandCompositor = Compositor::fromApplication(this);
-    connect(registry, &Registry::blurAnnounced, this,
-        [this, registry] (quint32 name, quint32 version) {
-            m_waylandBlurManager = registry->createBlurManager(name, version, this);
-
-            connect(m_waylandBlurManager, &BlurManager::removed, this,
-                [this] () {
-                    m_waylandBlurManager->deleteLater();
-                    m_waylandBlurManager = nullptr;
-                }
-            );
-        }
-    );
-    connect(registry, &Registry::contrastAnnounced, this,
-        [this, registry] (quint32 name, quint32 version) {
-            m_waylandContrastManager = registry->createContrastManager(name, version, this);
-
-            connect(m_waylandContrastManager, &ContrastManager::removed, this,
-                [this] () {
-                    m_waylandContrastManager->deleteLater();
-                    m_waylandContrastManager = nullptr;
-                }
-            );
-        }
-    );
-
-    registry->setup();
-    m_waylandConnection->roundtrip();
-}
 
 bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
 {
