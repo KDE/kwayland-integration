@@ -33,6 +33,7 @@ namespace KWayland
         class ConnectionThread;
         class PlasmaWindowManagement;
         class PlasmaShell;
+        class Registry;
     }
 }
 
@@ -49,7 +50,7 @@ public:
     KWayland::Client::BlurManager *waylandBlurManager() const;
     KWayland::Client::ContrastManager *waylandContrastManager() const;
     KWayland::Client::Compositor *waylandCompositor() const;
-    KWayland::Client::PlasmaWindowManagement *plasmaWindowManagement() const;
+    KWayland::Client::PlasmaWindowManagement *plasmaWindowManagement();
     KWayland::Client::PlasmaShell *waylandPlasmaShell() const;
 
 private:
@@ -59,6 +60,7 @@ private:
     KWayland::Client::Compositor *m_waylandCompositor;
     KWayland::Client::PlasmaWindowManagement *m_wm = nullptr;
     KWayland::Client::PlasmaShell *m_waylandPlasmaShell = nullptr;
+    KWayland::Client::Registry *m_registry = nullptr;
 };
 
 #endif
