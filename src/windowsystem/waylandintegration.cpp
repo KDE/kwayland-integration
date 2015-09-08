@@ -64,38 +64,6 @@ void WaylandIntegration::setupKWaylandIntegration()
     m_registry = new Registry(this);
     m_registry->create(m_waylandConnection);
     m_waylandCompositor = Compositor::fromApplication(this);
-    connect(m_registry, &Registry::blurAnnounced, this,
-        [this] (quint32 name, quint32 version) {
-            m_waylandBlurManager = m_registry->createBlurManager(name, version, this);
-
-            connect(m_waylandBlurManager, &BlurManager::removed, this,
-                [this] () {
-                    m_waylandBlurManager->deleteLater();
-                    m_waylandBlurManager = nullptr;
-                }
-            );
-        }
-    );
-    connect(m_registry, &Registry::contrastAnnounced, this,
-        [this] (quint32 name, quint32 version) {
-            m_waylandContrastManager = m_registry->createContrastManager(name, version, this);
-
-            connect(m_waylandContrastManager, &ContrastManager::removed, this,
-                [this] () {
-                    m_waylandContrastManager->deleteLater();
-                    m_waylandContrastManager = nullptr;
-                }
-            );
-        }
-    );
-
-    connect(m_registry, &Registry::interfacesAnnounced, this,
-        [this] {
-            if (!m_wm) {
-                qCWarning(KWAYLAND_KWS) << "This compositor does not support the Plasma Window Management interface";
-            }
-        }
-    );
 
     m_registry->setup();
     m_waylandConnection->roundtrip();
@@ -112,13 +80,37 @@ KWayland::Client::ConnectionThread *WaylandIntegration::waylandConnection() cons
     return m_waylandConnection;
 }
 
-KWayland::Client::BlurManager *WaylandIntegration::waylandBlurManager() const
+KWayland::Client::BlurManager *WaylandIntegration::waylandBlurManager()
 {
+    if (!m_waylandBlurManager) {
+        const KWayland::Client::Registry::AnnouncedInterface wmInterface = m_registry->interface(KWayland::Client::Registry::Interface::Blur);
+        m_waylandBlurManager = m_registry->createBlurManager(wmInterface.name, wmInterface.version, this);
+
+        connect(m_waylandBlurManager, &KWayland::Client::BlurManager::removed, this,
+            [this] () {
+                m_waylandBlurManager->deleteLater();
+                m_waylandBlurManager = nullptr;
+            }
+        );
+    }
+
     return m_waylandBlurManager;
 }
 
-KWayland::Client::ContrastManager *WaylandIntegration::waylandContrastManager() const
+KWayland::Client::ContrastManager *WaylandIntegration::waylandContrastManager()
 {
+    if (!m_waylandContrastManager) {
+        const KWayland::Client::Registry::AnnouncedInterface wmInterface = m_registry->interface(KWayland::Client::Registry::Interface::Contrast);
+        m_waylandContrastManager = m_registry->createContrastManager(wmInterface.name, wmInterface.version, this);
+
+        connect(m_waylandContrastManager, &KWayland::Client::ContrastManager::removed, this,
+            [this] () {
+                m_waylandContrastManager->deleteLater();
+                m_waylandContrastManager = nullptr;
+            }
+        );
+    }
+
     return m_waylandContrastManager;
 }
 

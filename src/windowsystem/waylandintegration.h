@@ -47,8 +47,8 @@ public:
     static WaylandIntegration *self();
 
     KWayland::Client::ConnectionThread *waylandConnection() const;
-    KWayland::Client::BlurManager *waylandBlurManager() const;
-    KWayland::Client::ContrastManager *waylandContrastManager() const;
+    KWayland::Client::BlurManager *waylandBlurManager();
+    KWayland::Client::ContrastManager *waylandContrastManager();
     KWayland::Client::Compositor *waylandCompositor() const;
     KWayland::Client::PlasmaWindowManagement *plasmaWindowManagement();
     KWayland::Client::PlasmaShell *waylandPlasmaShell();
