@@ -97,12 +97,6 @@ void WaylandIntegration::setupKWaylandIntegration()
         }
     );
 
-    connect(m_registry, &Registry::plasmaShellAnnounced, this,
-        [this] (quint32 name, quint32 version) {
-            m_waylandPlasmaShell = m_registry->createPlasmaShell(name, version, this);
-        }
-    );
-
     m_registry->setup();
     m_waylandConnection->roundtrip();
 }
@@ -138,46 +132,41 @@ KWayland::Client::PlasmaWindowManagement *WaylandIntegration::plasmaWindowManage
     using namespace KWayland::Client;
 
     if (!m_wm) {
-        connect(m_registry, &Registry::plasmaWindowManagementAnnounced, this,
-            [this] (quint32 name, quint32 version) {
-                m_wm = m_registry->createPlasmaWindowManagement(name, version, this);
-                connect(m_wm, &PlasmaWindowManagement::windowCreated, this,
-                    [this] (PlasmaWindow *w) {
-                        emit KWindowSystem::self()->windowAdded(w->internalId());
-                        emit KWindowSystem::self()->stackingOrderChanged();
-                        connect(w, &PlasmaWindow::unmapped, this,
-                            [w] {
-                                emit KWindowSystem::self()->windowRemoved(w->internalId());
-                                emit KWindowSystem::self()->stackingOrderChanged();
-                            }
-                        );
-                    }
-                );
-                connect(m_wm, &PlasmaWindowManagement::activeWindowChanged, this,
-                    [this] {
-                        if (PlasmaWindow *w = m_wm->activeWindow()) {
-                            emit KWindowSystem::self()->activeWindowChanged(w->internalId());
-                        } else {
-                            emit KWindowSystem::self()->activeWindowChanged(0);
-                        }
-                    }
-                );
-                connect(m_wm, &PlasmaWindowManagement::showingDesktopChanged, KWindowSystem::self(), &KWindowSystem::showingDesktopChanged);
-                emit KWindowSystem::self()->compositingChanged(true);
-                emit KWindowSystem::self()->showingDesktopChanged(m_wm->isShowingDesktop());
+        const Registry::AnnouncedInterface wmInterface = m_registry->interface(Registry::Interface::PlasmaWindowManagement);
+        m_wm = m_registry->createPlasmaWindowManagement(wmInterface.name, wmInterface.version, this);
+        connect(m_wm, &PlasmaWindowManagement::windowCreated, this,
+            [this] (PlasmaWindow *w) {
+                emit KWindowSystem::self()->windowAdded(w->internalId());
                 emit KWindowSystem::self()->stackingOrderChanged();
-                if (PlasmaWindow *w = m_wm->activeWindow()) {
-                    emit KWindowSystem::self()->activeWindowChanged(w->internalId());
-                }
-                qCDebug(KWAYLAND_KWS) << "Plasma Window Management interface bound";
+                connect(w, &PlasmaWindow::unmapped, this,
+                    [w] {
+                        emit KWindowSystem::self()->windowRemoved(w->internalId());
+                        emit KWindowSystem::self()->stackingOrderChanged();
+                    }
+                );
             }
         );
+        connect(m_wm, &PlasmaWindowManagement::activeWindowChanged, this,
+            [this] {
+                if (PlasmaWindow *w = m_wm->activeWindow()) {
+                    emit KWindowSystem::self()->activeWindowChanged(w->internalId());
+                } else {
+                    emit KWindowSystem::self()->activeWindowChanged(0);
+                }
+            }
+        );
+        connect(m_wm, &PlasmaWindowManagement::showingDesktopChanged, KWindowSystem::self(), &KWindowSystem::showingDesktopChanged);
+        qCDebug(KWAYLAND_KWS) << "Plasma Window Management interface bound";
     }
     
     return m_wm;
 }
 
-KWayland::Client::PlasmaShell *WaylandIntegration::waylandPlasmaShell() const
+KWayland::Client::PlasmaShell *WaylandIntegration::waylandPlasmaShell()
 {
+    if (!m_waylandPlasmaShell) {
+        const KWayland::Client::Registry::AnnouncedInterface wmInterface = m_registry->interface(KWayland::Client::Registry::Interface::PlasmaShell);
+        m_waylandPlasmaShell = m_registry->createPlasmaShell(wmInterface.name, wmInterface.version, this);
+    }
     return m_waylandPlasmaShell;
 }

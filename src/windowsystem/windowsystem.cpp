@@ -39,16 +39,12 @@ WindowSystem::WindowSystem()
     : QObject()
     , KWindowSystemPrivate()
 {
-    m_wm = WaylandIntegration::self()->plasmaWindowManagement();
     m_waylandPlasmaShell = WaylandIntegration::self()->waylandPlasmaShell();
 }
 
 KWayland::Client::PlasmaWindow *WindowSystem::window(WId wid) const
 {
-    if (!m_wm) {
-        return nullptr;
-    }
-    const auto &windows = m_wm->windows();
+    const auto &windows = WaylandIntegration::self()->plasmaWindowManagement()->windows();
     auto it = std::find_if(windows.begin(), windows.end(), [wid] (PlasmaWindow *w) { return w->internalId() == wid; } );
     if (it != windows.end()) {
         return *it;
@@ -74,8 +70,9 @@ void WindowSystem::forceActiveWindow(WId win, long int time)
 
 WId WindowSystem::activeWindow()
 {
-    if (m_wm && m_wm->activeWindow()) {
-        return m_wm->activeWindow()->internalId();
+    KWayland::Client::PlasmaWindowManagement *wm = WaylandIntegration::self()->plasmaWindowManagement();
+    if (wm->activeWindow()) {
+        return wm->activeWindow()->internalId();
     }
     return 0;
 }
@@ -281,9 +278,7 @@ void WindowSystem::setOnDesktop(WId win, int desktop)
 
 void WindowSystem::setShowingDesktop(bool showing)
 {
-    if (m_wm) {
-        m_wm->setShowingDesktop(showing);
-    }
+    WaylandIntegration::self()->plasmaWindowManagement()->setShowingDesktop(showing);
 }
 
 void WindowSystem::clearState(WId win, NET::States state)
@@ -342,23 +337,17 @@ void WindowSystem::setUserTime(WId win, long int time)
 
 bool WindowSystem::showingDesktop()
 {
-    if (m_wm) {
-        return m_wm->isShowingDesktop();
-    }
-    return false;
+    return WaylandIntegration::self()->plasmaWindowManagement()->isShowingDesktop();
 }
 
 QList< WId > WindowSystem::stackingOrder()
 {
-    if (m_wm) {
-        const auto &windows = m_wm->windows();
-        QList<WId> ret;
-        for (auto w : windows) {
-            ret << w->internalId();
-        }
-        return ret;
+    const auto &windows = WaylandIntegration::self()->plasmaWindowManagement()->windows();
+    QList<WId> ret;
+    for (auto w : windows) {
+        ret << w->internalId();
     }
-    return QList<WId>();
+    return ret;
 }
 
 WId WindowSystem::transientFor(WId window)

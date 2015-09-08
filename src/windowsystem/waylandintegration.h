@@ -51,7 +51,7 @@ public:
     KWayland::Client::ContrastManager *waylandContrastManager() const;
     KWayland::Client::Compositor *waylandCompositor() const;
     KWayland::Client::PlasmaWindowManagement *plasmaWindowManagement();
-    KWayland::Client::PlasmaShell *waylandPlasmaShell() const;
+    KWayland::Client::PlasmaShell *waylandPlasmaShell();
 
 private:
     KWayland::Client::ConnectionThread *m_waylandConnection;
