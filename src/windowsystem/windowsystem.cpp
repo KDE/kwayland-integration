@@ -39,7 +39,6 @@ WindowSystem::WindowSystem()
     : QObject()
     , KWindowSystemPrivate()
 {
-    m_waylandPlasmaShell = WaylandIntegration::self()->waylandPlasmaShell();
 }
 
 KWayland::Client::PlasmaWindow *WindowSystem::window(WId wid) const
@@ -297,10 +296,6 @@ void WindowSystem::setState(WId win, NET::States state)
 
 void WindowSystem::setType(WId win, NET::WindowType windowType)
 {
-    if (!m_waylandPlasmaShell) {
-        return;
-    }
-
     KWayland::Client::PlasmaShellSurface::Role role;
 
     switch (windowType) {
@@ -323,7 +318,7 @@ void WindowSystem::setType(WId win, NET::WindowType windowType)
     if (!s) {
         return;
     }
-    KWayland::Client::PlasmaShellSurface *shellSurface = m_waylandPlasmaShell->createSurface(s, this);
+    KWayland::Client::PlasmaShellSurface *shellSurface = WaylandIntegration::self()->waylandPlasmaShell()->createSurface(s, this);
 
     shellSurface->setRole(role);
 }

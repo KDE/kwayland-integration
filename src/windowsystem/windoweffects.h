@@ -50,12 +50,6 @@ public:
     void enableBlurBehind(WId window, bool enable = true, const QRegion &region = QRegion()) override;
     void enableBackgroundContrast(WId window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion()) override;
     void markAsDashboard(WId window) override;
-
-private:
-    KWayland::Client::ConnectionThread *m_waylandConnection;
-    KWayland::Client::BlurManager *m_waylandBlurManager;
-    KWayland::Client::ContrastManager *m_waylandContrastManager;
-    KWayland::Client::Compositor *m_waylandCompositor;
 };
 
 #endif
