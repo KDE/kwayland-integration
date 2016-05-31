@@ -30,5 +30,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 find_package(KF5Wayland CONFIG REQUIRED)
 
 add_subdirectory(src)
+add_subdirectory(autotests)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
