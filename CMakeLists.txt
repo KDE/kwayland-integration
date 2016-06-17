@@ -4,7 +4,7 @@ set(PROJECT_VERSION_MAJOR 5)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.4.0")
-set(KF5_MIN_VERSION "5.23.0")
+set(KF5_MIN_VERSION "5.24.0")
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 
