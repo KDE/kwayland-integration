@@ -22,6 +22,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
+include(ECMQtDeclareLoggingCategory)
 
 # required frameworks
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
