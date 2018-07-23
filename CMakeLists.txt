@@ -39,6 +39,8 @@ add_definitions(-DQT_USE_QSTRINGBUILDER)
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 add_subdirectory(src)
-add_subdirectory(autotests)
+if(BUILD_TESTING)
+   add_subdirectory(autotests)
+endif()   
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
