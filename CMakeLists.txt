@@ -28,6 +28,7 @@ include(ECMQtDeclareLoggingCategory)
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     IdleTime
     WindowSystem
+    GuiAddons
 )
 find_package(KF5Wayland CONFIG REQUIRED)
 
