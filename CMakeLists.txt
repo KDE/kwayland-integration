@@ -23,6 +23,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
+include(KDEClangFormat)
 
 # required frameworks
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -39,5 +40,9 @@ add_subdirectory(src)
 if(BUILD_TESTING)
    add_subdirectory(autotests)
 endif()   
+
+# add clang-format target for all our real source files
+file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
+kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
