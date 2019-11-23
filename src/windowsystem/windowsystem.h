@@ -34,6 +34,15 @@ class PlasmaShell;
 }
 }
 
+// Compat with KF < 5.64
+#ifndef KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE
+#ifndef KWINDOWSYSTEM_NO_DEPRECATED
+#define KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(x, y) 1
+#else
+#define KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(x, y) 0
+#endif
+#endif
+
 class WindowSystem : public QObject, public KWindowSystemPrivate
 {
     Q_OBJECT
@@ -52,7 +61,7 @@ public:
     void setOnAllDesktops(WId win, bool b) override;
     void setOnDesktop(WId win, int desktop) override;
     void setOnActivities(WId win, const QStringList &activities) override;
-#ifndef KWINDOWSYSTEM_NO_DEPRECATED
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
     WId transientFor(WId window) override;
     WId groupLeader(WId window) override;
 #endif
