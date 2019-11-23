@@ -349,9 +349,6 @@ void WindowSystem::clearState(WId win, NET::States state)
     if (state & NET::KeepAbove) {
         qCDebug(KWAYLAND_KWS) << "This plugin does not support changing KeepAbove window state";
     }
-    if (state & NET::StaysOnTop) {
-        qCDebug(KWAYLAND_KWS) << "This plugin does not support changing StaysOnTop window state";
-    }
     if (state & NET::SkipPager) {
         qCDebug(KWAYLAND_KWS) << "This plugin does not support changing SkipPager window state";
     }
@@ -409,9 +406,6 @@ void WindowSystem::setState(WId win, NET::States state)
     }
     if (state & NET::KeepAbove) {
         qCDebug(KWAYLAND_KWS) << "This plugin does not support changing KeepAbove window state";
-    }
-    if (state & NET::StaysOnTop) {
-        qCDebug(KWAYLAND_KWS) << "This plugin does not support changing StaysOnTop window state";
     }
     if (state & NET::SkipPager) {
         qCDebug(KWAYLAND_KWS) << "This plugin does not support changing SkipPager window state";
