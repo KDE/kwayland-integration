@@ -29,28 +29,33 @@ public:
     WindowEffects();
     ~WindowEffects() override;
 
-    static QWindow *windowForId(WId);
-
     bool eventFilter(QObject *watched, QEvent *event) override;
     void trackWindow(QWindow *window);
     void releaseWindow(QWindow *window);
 
     bool isEffectAvailable(KWindowEffects::Effect effect) override;
-    void slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset) override;
 #if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 81)
     QList<QSize> windowSizes(const QList<WId> &ids) override;
 #endif
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
+    void slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset) override;
     void presentWindows(WId controller, const QList<WId> &ids) override;
     void presentWindows(WId controller, int desktop = NET::OnAllDesktops) override;
     void highlightWindows(WId controller, const QList<WId> &ids) override;
     void enableBlurBehind(WId winId, bool enable = true, const QRegion &region = QRegion()) override;
-    void enableBlurBehind(QWindow *window, bool enable, const QRegion &region);
     void enableBackgroundContrast(WId winId, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion()) override;
-    void enableBackgroundContrast(QWindow *window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion());
+#endif
 #if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 67)
     void markAsDashboard(WId window) override;
 #endif
+    void slideWindow(QWindow *window, KWindowEffects::SlideFromLocation location, int offset) override;
+    void enableBlurBehind(QWindow *window, bool enable, const QRegion &region) override;
+    void enableBackgroundContrast(QWindow *window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion()) override;
+
 private:
+    void enableBlurBehindInternal(QWindow *window, bool enable, const QRegion &region);
+    void enableBackgroundContrastInternal(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region);
+
     QHash<QWindow *, QMetaObject::Connection> m_windowWatchers;
     QHash<QWindow *, QRegion> m_blurRegions;
     struct BackgroundContrastData {

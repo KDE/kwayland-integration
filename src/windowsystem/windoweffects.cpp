@@ -33,7 +33,8 @@ WindowEffects::WindowEffects()
 WindowEffects::~WindowEffects()
 {}
 
-QWindow *WindowEffects::windowForId(WId wid)
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
+static QWindow *windowForId(WId wid)
 {
     QWindow *window = nullptr;
 
@@ -45,6 +46,7 @@ QWindow *WindowEffects::windowForId(WId wid)
     }
     return window;
 }
+#endif
 
 void WindowEffects::trackWindow(QWindow *window)
 {
@@ -85,13 +87,13 @@ bool WindowEffects::eventFilter(QObject *watched, QEvent *event)
         {
             auto it = m_blurRegions.constFind(window);
             if (it != m_blurRegions.constEnd()) {
-                enableBlurBehind(window, true, *it);
+                enableBlurBehindInternal(window, true, *it);
             }
         }
         {
             auto it = m_backgroundConstrastRegions.constFind(window);
             if (it != m_backgroundConstrastRegions.constEnd()) {
-                enableBackgroundContrast(window, true, it->contrast, it->intensity, it->saturation, it->region);
+                enableBackgroundContrastInternal(window, true, it->contrast, it->intensity, it->saturation, it->region);
             }
         }
     }
@@ -112,12 +114,76 @@ bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
     }
 }
 
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 81)
+QList<QSize> WindowEffects::windowSizes(const QList<WId> &ids)
+{
+    Q_UNUSED(ids)
+    QList<QSize> sizes;
+    return sizes;
+}
+#endif
+
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
 void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset)
+{
+    auto window = windowForId(id);
+    if (window) {
+        slideWindow(window, location, offset);
+    }
+}
+#endif
+
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
+void WindowEffects::presentWindows(WId controller, const QList<WId> &ids)
+{
+    Q_UNUSED(controller)
+    Q_UNUSED(ids)
+}
+#endif
+
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
+void WindowEffects::presentWindows(WId controller, int desktop)
+{
+    Q_UNUSED(controller)
+    Q_UNUSED(desktop)
+}
+#endif
+
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
+void WindowEffects::highlightWindows(WId controller, const QList<WId> &ids)
+{
+    Q_UNUSED(controller)
+    Q_UNUSED(ids)
+}
+#endif
+
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
+void WindowEffects::enableBlurBehind(WId winId, bool enable, const QRegion &region)
+{
+    auto window = windowForId(winId);
+    if (window) {
+        enableBlurBehind(window, enable, region);
+    }
+}
+#endif
+
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
+void WindowEffects::enableBackgroundContrast(WId winId, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
+{
+    auto window = windowForId(winId);
+    if (window) {
+        enableBackgroundContrast(window, enable, contrast, intensity, saturation, region);
+    }
+}
+#endif
+
+void WindowEffects::slideWindow(QWindow *window, KWindowEffects::SlideFromLocation location, int offset)
 {
     if (!WaylandIntegration::self()->waylandSlideManager()) {
         return;
     }
-    KWayland::Client::Surface *surface = KWayland::Client::Surface::fromQtWinId(id);
+    KWayland::Client::Surface *surface = KWayland::Client::Surface::fromWindow(window);
+
     if (surface) {
         if (location != KWindowEffects::SlideFromLocation::NoEdge) {
             auto slide = WaylandIntegration::self()->waylandSlideManager()->createSlide(surface, surface);
@@ -150,40 +216,8 @@ void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation locati
     }
 }
 
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 81)
-QList<QSize> WindowEffects::windowSizes(const QList<WId> &ids)
+void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion &region)
 {
-    Q_UNUSED(ids)
-    QList<QSize> sizes;
-    return sizes;
-}
-#endif
-
-void WindowEffects::presentWindows(WId controller, const QList<WId> &ids)
-{
-    Q_UNUSED(controller)
-    Q_UNUSED(ids)
-}
-
-void WindowEffects::presentWindows(WId controller, int desktop)
-{
-    Q_UNUSED(controller)
-    Q_UNUSED(desktop)
-}
-
-void WindowEffects::highlightWindows(WId controller, const QList<WId> &ids)
-{
-    Q_UNUSED(controller)
-    Q_UNUSED(ids)
-}
-
-void WindowEffects::enableBlurBehind(WId winId, bool enable, const QRegion &region)
-{
-    auto window = windowForId(winId);
-    if (!window) {
-        return;
-    }
     if (enable) {
         trackWindow(window);
         m_blurRegions[window] = region;
@@ -192,10 +226,10 @@ void WindowEffects::enableBlurBehind(WId winId, bool enable, const QRegion &regi
         releaseWindow(window);
     }
 
-    enableBlurBehind(window, enable, region);
+    enableBlurBehindInternal(window, enable, region);
 }
 
-void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion &region)
+void WindowEffects::enableBlurBehindInternal(QWindow *window, bool enable, const QRegion &region)
 {
     if (!WaylandIntegration::self()->waylandBlurManager()) {
         return;
@@ -215,12 +249,8 @@ void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion
     }
 }
 
-void WindowEffects::enableBackgroundContrast(WId winId, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
+void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
 {
-    auto window = windowForId(winId);
-    if (!window) {
-        return;
-    }
     if (enable) {
         trackWindow(window);
         m_backgroundConstrastRegions[window].contrast = contrast;
@@ -232,10 +262,10 @@ void WindowEffects::enableBackgroundContrast(WId winId, bool enable, qreal contr
         releaseWindow(window);
     }
 
-    enableBackgroundContrast(window, enable, contrast, intensity, saturation, region);
+    enableBackgroundContrastInternal(window, enable, contrast, intensity, saturation, region);
 }
 
-void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
+void WindowEffects::enableBackgroundContrastInternal(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
 {
     if (!WaylandIntegration::self()->waylandContrastManager()) {
         return;
