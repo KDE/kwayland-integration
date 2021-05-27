@@ -20,6 +20,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} )
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Core
     Widgets
+    WaylandClient
+    XkbCommonSupport # Needed by Qt5::WaylandClientPrivate
 )
 
 include(KDEInstallDirs)
@@ -33,8 +35,12 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     IdleTime
     WindowSystem
     GuiAddons
+    Wayland
 )
-find_package(KF5Wayland CONFIG REQUIRED)
+
+find_package(QtWaylandScanner REQUIRED)
+find_package(WaylandProtocols 1.21 REQUIRED)
+find_package(Wayland 1.15 COMPONENTS Client)
 
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
