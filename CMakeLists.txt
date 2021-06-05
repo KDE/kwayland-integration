@@ -41,13 +41,14 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 find_package(QtWaylandScanner REQUIRED)
 find_package(WaylandProtocols 1.21 REQUIRED)
 find_package(Wayland 1.15 COMPONENTS Client)
+find_package(PkgConfig REQUIRED)
 
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 add_subdirectory(src)
 if(BUILD_TESTING)
    add_subdirectory(autotests)
-endif()   
+endif()
 
 # add clang-format target for all our real source files
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
