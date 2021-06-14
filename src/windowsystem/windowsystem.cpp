@@ -66,6 +66,7 @@ void WindowSystem::requestToken(QWindow *window, uint32_t serial, const QString 
 
 void WindowSystem::setCurrentToken(const QString &token)
 {
+    qputenv("XDG_ACTIVATION_TOKEN", token.toUtf8());
     m_lastToken = token;
 }
 
