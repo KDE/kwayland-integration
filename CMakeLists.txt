@@ -1,4 +1,7 @@
 project(kwayland-integration)
+
+set(CMAKE_C_STANDARD 99)
+
 set(PROJECT_VERSION "5.22.80")
 set(PROJECT_VERSION_MAJOR 5)
 
