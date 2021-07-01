@@ -45,7 +45,7 @@ public:
     KWayland::Client::ContrastManager *waylandContrastManager();
     KWayland::Client::SlideManager *waylandSlideManager();
     KWayland::Client::ShadowManager *waylandShadowManager();
-    KWayland::Client::Compositor *waylandCompositor() const;
+    KWayland::Client::Compositor *waylandCompositor();
     KWayland::Client::PlasmaWindowManagement *plasmaWindowManagement();
     KWayland::Client::PlasmaShell *waylandPlasmaShell();
     KWayland::Client::ShmPool *createShmPool();

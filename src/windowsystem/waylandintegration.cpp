@@ -61,7 +61,6 @@ void WaylandIntegration::setupKWaylandIntegration()
         m_activationInterface = {name, version};
     });
     m_registry->create(m_waylandConnection);
-    m_waylandCompositor = Compositor::fromApplication(this);
 
     m_registry->setup();
     m_waylandConnection->roundtrip();
@@ -158,8 +157,23 @@ KWayland::Client::ShadowManager *WaylandIntegration::waylandShadowManager()
     return m_waylandShadowManager;
 }
 
-KWayland::Client::Compositor *WaylandIntegration::waylandCompositor() const
+KWayland::Client::Compositor *WaylandIntegration::waylandCompositor()
 {
+    if (!m_waylandCompositor && m_registry) {
+        const KWayland::Client::Registry::AnnouncedInterface wmInterface = m_registry->interface(KWayland::Client::Registry::Interface::Compositor);
+        if (wmInterface.name == 0) {
+            return nullptr;
+        }
+
+        m_waylandCompositor = m_registry->createCompositor(wmInterface.name, wmInterface.version, qApp);
+
+        connect(m_waylandCompositor, &KWayland::Client::Compositor::removed, this,
+            [this] () {
+                delete m_waylandCompositor;
+            }
+        );
+    }
+
     return m_waylandCompositor;
 }
 
