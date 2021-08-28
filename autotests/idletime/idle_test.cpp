@@ -4,13 +4,13 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QtTest>
 #include <QSignalSpy>
+#include <QtTest>
 // Frameworks
 #include <KIdleTime>
 #include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/fakeinput.h>
+#include <KWayland/Client/registry.h>
 
 using namespace KWayland::Client;
 
@@ -72,7 +72,7 @@ void IdleTest::testTimeout()
     QVERIFY(KIdleTime::instance()->idleTimeouts().isEmpty());
     QSignalSpy timeout1Spy(KIdleTime::instance(), SIGNAL(timeoutReached(int)));
     QVERIFY(timeout1Spy.isValid());
-    QSignalSpy timeout2Spy(KIdleTime::instance(), SIGNAL(timeoutReached(int,int)));
+    QSignalSpy timeout2Spy(KIdleTime::instance(), SIGNAL(timeoutReached(int, int)));
     QVERIFY(timeout2Spy.isValid());
 
     const auto id = KIdleTime::instance()->addIdleTimeout(6000);
