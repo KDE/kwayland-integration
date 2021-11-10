@@ -213,6 +213,7 @@ void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion
             auto blur = WaylandIntegration::self()->waylandBlurManager()->createBlur(surface, surface);
             blur->setRegion(WaylandIntegration::self()->waylandCompositor()->createRegion(region, nullptr));
             blur->commit();
+            surface->commit(KWayland::Client::Surface::CommitFlag::None);
         } else {
             WaylandIntegration::self()->waylandBlurManager()->removeBlur(surface);
         }
@@ -255,6 +256,7 @@ void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal
             backgroundContrast->setIntensity(intensity);
             backgroundContrast->setSaturation(saturation);
             backgroundContrast->commit();
+            surface->commit(KWayland::Client::Surface::CommitFlag::None);
         } else {
             WaylandIntegration::self()->waylandContrastManager()->removeContrast(surface);
         }
