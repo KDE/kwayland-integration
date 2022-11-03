@@ -11,6 +11,8 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
+#include <wayland-client-core.h>
+
 #include <QDebug>
 #include <QExposeEvent>
 
@@ -34,8 +36,13 @@ void WindowShadowTile::destroy()
 
 WindowShadowTile *WindowShadowTile::get(const KWindowShadowTile *tile)
 {
-    KWindowShadowTilePrivate *d = KWindowShadowTilePrivate::get(tile);
-    return static_cast<WindowShadowTile *>(d);
+    auto d = static_cast<WindowShadowTile *>(KWindowShadowTilePrivate::get(tile));
+
+    if (d && d->buffer && wl_proxy_get_is_defunct((wl_proxy *)d->buffer.toStrongRef()->buffer())) {
+        d->destroy();
+        d->create();
+    }
+    return d;
 }
 
 static KWayland::Client::Buffer::Ptr bufferForTile(const KWindowShadowTile::Ptr &tile)
