@@ -25,6 +25,7 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
 include(KDEClangFormat)
 include(KDEGitCommitHooks)
+include(ECMDeprecationSettings)
 
 find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Core
@@ -48,7 +49,9 @@ find_package(WaylandProtocols 1.21 REQUIRED)
 find_package(Wayland 1.15 COMPONENTS Client)
 find_package(PkgConfig REQUIRED)
 
-#add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
+ecm_set_disabled_deprecation_versions(QT 5.15.2
+    KF 5.101
+)
 
 add_subdirectory(src)
 if(BUILD_TESTING)
