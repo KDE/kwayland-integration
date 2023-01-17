@@ -9,6 +9,7 @@ Dependencies:
     'frameworks/kidletime': '@latest'
     'frameworks/kwayland': '@latest'
     'frameworks/kwindowsystem': '@latest'
+    'libraries/plasma-wayland-protocols': '@latest'
 
 - 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
   'require':
@@ -17,3 +18,4 @@ Dependencies:
     'frameworks/kidletime': '@latest-kf6'
     'frameworks/kwayland': '@latest-kf6'
     'frameworks/kwindowsystem': '@latest-kf6'
+    'libraries/plasma-wayland-protocols': '@latest-kf6'

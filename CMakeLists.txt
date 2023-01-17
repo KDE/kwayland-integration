@@ -47,6 +47,7 @@ endif()
 find_package(WaylandProtocols 1.21 REQUIRED)
 find_package(Wayland 1.15 COMPONENTS Client)
 find_package(PkgConfig REQUIRED)
+find_package(PlasmaWaylandProtocols REQUIRED)
 
 ecm_set_disabled_deprecation_versions(QT 5.15.2
     KF 5.101
