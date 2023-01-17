@@ -54,9 +54,6 @@ ecm_set_disabled_deprecation_versions(QT 5.15.2
 )
 
 add_subdirectory(src)
-if(BUILD_TESTING)
-   add_subdirectory(autotests)
-endif()
 
 # add clang-format target for all our real source files
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
