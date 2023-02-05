@@ -346,7 +346,7 @@ void WindowSystem::clearState(WId win, NET::States state)
 
     KWayland::Client::PlasmaShellSurface *plasmaShellSurface = nullptr;
 
-    if (state & NET::SkipTaskbar) {
+    if (state & NET::SkipTaskbar || state & NET::SkipSwitcher) {
         if (!WaylandIntegration::self()->waylandPlasmaShell()) {
             return;
         }
@@ -361,6 +361,10 @@ void WindowSystem::clearState(WId win, NET::States state)
 
     if (state & NET::SkipTaskbar) {
         plasmaShellSurface->setSkipTaskbar(false);
+    }
+
+    if (state & NET::SkipSwitcher) {
+        plasmaShellSurface->setSkipSwitcher(false);
     }
 
     if (state & NET::Max) {
@@ -407,7 +411,7 @@ void WindowSystem::setState(WId win, NET::States state)
 
     KWayland::Client::PlasmaShellSurface *plasmaShellSurface = nullptr;
 
-    if (state & NET::SkipTaskbar) {
+    if (state & NET::SkipTaskbar || state & NET::SkipSwitcher) {
         if (!WaylandIntegration::self()->waylandPlasmaShell()) {
             return;
         }
@@ -422,6 +426,10 @@ void WindowSystem::setState(WId win, NET::States state)
 
     if (state & NET::SkipTaskbar) {
         plasmaShellSurface->setSkipTaskbar(true);
+    }
+
+    if (state & NET::SkipSwitcher) {
+        plasmaShellSurface->setSkipSwitcher(true);
     }
 
     if (state & NET::Max) {
