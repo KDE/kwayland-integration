@@ -37,7 +37,6 @@ public:
 
     static QWindow *windowForId(WId);
 
-    bool eventFilter(QObject *watched, QEvent *event) override;
     void trackWindow(QWindow *window);
     void releaseWindow(QWindow *window);
 

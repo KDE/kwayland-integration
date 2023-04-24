@@ -161,7 +161,6 @@ QWindow *WindowEffects::windowForId(WId wid)
 void WindowEffects::trackWindow(QWindow *window)
 {
     if (!m_windowWatchers.contains(window)) {
-        window->installEventFilter(this);
         auto conn = connect(window, &QObject::destroyed, this, [this, window]() {
             resetBlur(window);
             m_blurRegions.remove(window);
@@ -173,11 +172,22 @@ void WindowEffects::trackWindow(QWindow *window)
         m_windowWatchers[window] << conn;
         auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
         if (waylandWindow) {
-            auto conn = connect(waylandWindow, &QtWaylandClient::QWaylandWindow::wlSurfaceDestroyed, this, [this, window]() {
+            auto conn1 = connect(waylandWindow, &QtWaylandClient::QWaylandWindow::wlSurfaceCreated, this, [this, window]() {
+                if (auto it = m_blurRegions.constFind(window); it != m_blurRegions.constEnd()) {
+                    installBlur(window, true, *it);
+                }
+                if (auto it = m_backgroundConstrastRegions.constFind(window); it != m_backgroundConstrastRegions.constEnd()) {
+                    installContrast(window, true, it->contrast, it->intensity, it->saturation, it->region);
+                }
+                if (auto it = m_slideMap.constFind(window); it != m_slideMap.constEnd()) {
+                    installSlide(window, it->location, it->offset);
+                }
+            });
+            auto conn2 = connect(waylandWindow, &QtWaylandClient::QWaylandWindow::wlSurfaceDestroyed, this, [this, window]() {
                 resetBlur(window);
                 resetContrast(window);
             });
-            m_windowWatchers[window] << conn;
+            m_windowWatchers[window] << conn1 << conn2;
         }
     }
 }
@@ -188,7 +198,6 @@ void WindowEffects::releaseWindow(QWindow *window)
         for (const auto &conn : m_windowWatchers[window]) {
             disconnect(conn);
         }
-        window->removeEventFilter(this);
         m_windowWatchers.remove(window);
     }
 }
@@ -213,42 +222,6 @@ void WindowEffects::resetBlur(QWindow *window, Blur *blur)
 void WindowEffects::resetContrast(QWindow *window, Contrast *contrast)
 {
     replaceValue(m_contrasts, window, contrast);
-}
-
-bool WindowEffects::eventFilter(QObject *watched, QEvent *event)
-{
-    if (event->type() == QEvent::Expose) {
-        auto ee = static_cast<QExposeEvent *>(event);
-
-        if ((ee->region().isNull())) {
-            return false;
-        }
-
-        auto window = qobject_cast<QWindow *>(watched);
-        if (!window) {
-            return false;
-        }
-
-        {
-            auto it = m_blurRegions.constFind(window);
-            if (it != m_blurRegions.constEnd()) {
-                installBlur(window, true, *it);
-            }
-        }
-        {
-            auto it = m_backgroundConstrastRegions.constFind(window);
-            if (it != m_backgroundConstrastRegions.constEnd()) {
-                installContrast(window, true, it->contrast, it->intensity, it->saturation, it->region);
-            }
-        }
-        {
-            auto it = m_slideMap.constFind(window);
-            if (it != m_slideMap.constEnd()) {
-                installSlide(window, it->location, it->offset);
-            }
-        }
-    }
-    return false;
 }
 
 bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
