@@ -10,6 +10,8 @@ Dependencies:
     'frameworks/kwayland': '@latest'
     'frameworks/kwindowsystem': '@latest'
     'libraries/plasma-wayland-protocols': '@latest'
+    'third-party/wayland': '@latest'
+    'third-party/wayland-protocols': '@latest'
 
 - 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
   'require':
@@ -19,3 +21,5 @@ Dependencies:
     'frameworks/kwayland': '@latest-kf6'
     'frameworks/kwindowsystem': '@latest-kf6'
     'libraries/plasma-wayland-protocols': '@latest-kf6'
+    'third-party/wayland': '@latest'
+    'third-party/wayland-protocols': '@latest'
