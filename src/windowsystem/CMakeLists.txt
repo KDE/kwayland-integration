@@ -57,16 +57,16 @@ pkg_check_modules(XKBCommon REQUIRED IMPORTED_TARGET xkbcommon)
 target_link_libraries(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin
     KF${QT_MAJOR_VERSION}::WindowSystem
     KF${QT_MAJOR_VERSION}::WaylandClient
-    Qt::Widgets
+    Qt${QT_MAJOR_VERSION}::Widgets
     Wayland::Client
-    Qt::WaylandClient
-    Qt::WaylandClientPrivate
+    Qt${QT_MAJOR_VERSION}::WaylandClient
+    Qt${QT_MAJOR_VERSION}::WaylandClientPrivate
     PkgConfig::XKBCommon
 )
 
 if (QT_MAJOR_VERSION EQUAL "5")
     target_link_libraries(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin
-        Qt::XkbCommonSupportPrivate
+        Qt5::XkbCommonSupportPrivate
     )
 endif()
 
