@@ -33,7 +33,7 @@ option(BUILD_QT5 "Build for Qt5" ON)
 option(BUILD_QT6 "Build for Qt6" ON)
 
 
-#CI is stupid and doesn't allow us to set CMAKE options per build variant
+# For KDE CI only. As the current infrastructure doesn't allow us to set CMAKE options per build variant
 if ($ENV{CI_JOB_NAME_SLUG} MATCHES "qt5")
     set(BUILD_QT5 ON)
     set(BUILD_QT6 OFF)
