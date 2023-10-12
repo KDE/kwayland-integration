@@ -9,6 +9,7 @@
 
 #include "windowinfo.h"
 #include "kwindowsystem.h"
+#include "logging.h"
 #include "waylandintegration.h"
 
 #include <config-kwindowsystem.h>
@@ -65,6 +66,9 @@ NET::WindowType WindowInfo::windowType(NET::WindowTypes supported_types) const
     if (!m_plasmaShellSurface || !m_plasmaShellSurface->isValid()) {
         return NET::Unknown;
     }
+
+    qCWarning(KWAYLAND_KWS) << "KWindowInfo::windowType only works on Wayland because the window has a plasma-surface."
+                            << "This behavior will be removed and the method will stop working in the future.";
 
     if (m_properties & NET::WMWindowType) {
         switch (m_plasmaShellSurface->role()) {

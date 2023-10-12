@@ -393,6 +393,9 @@ void WindowSystem::clearState(WId win, NET::States state)
         }
     }
 
+    qCWarning(KWAYLAND_KWS) << "KWindowSystem::clearState only has an effect on Wayland because the passed window has a plasma-surface."
+                            << "This behavior will be removed and the method will stop working in the future.";
+
     if (state & NET::SkipTaskbar) {
         plasmaShellSurface->setSkipTaskbar(false);
     }
@@ -444,6 +447,9 @@ void WindowSystem::setState(WId win, NET::States state)
     }
 
     KWayland::Client::PlasmaShellSurface *plasmaShellSurface = nullptr;
+
+    qCWarning(KWAYLAND_KWS) << "KWindowSystem::setState only has an effect on Wayland because the passed window has a plasma-surface."
+                            << "This behavior will be removed and the method will stop working in the future.";
 
     if (state & NET::SkipTaskbar || state & NET::SkipSwitcher) {
         if (!WaylandIntegration::self()->waylandPlasmaShell()) {
@@ -506,6 +512,10 @@ void WindowSystem::setType(WId win, NET::WindowType windowType)
     if (!WaylandIntegration::self()->waylandPlasmaShell()) {
         return;
     }
+
+    qCWarning(KWAYLAND_KWS) << "KWindowSystem::setType creates a plasma-surface for the window in order to work."
+                            << "This behavior will be removed and the method will stop working in the future.";
+
     KWayland::Client::PlasmaShellSurface::Role role;
 
     switch (windowType) {
