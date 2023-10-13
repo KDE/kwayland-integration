@@ -79,6 +79,7 @@ void WindowSystem::forceActiveWindow(WId win, long int time)
     activateWindow(win, time);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::requestToken(QWindow *window, uint32_t serial, const QString &app_id)
 {
     wl_surface *wlSurface = [](QWindow *window) -> wl_surface * {
@@ -113,12 +114,14 @@ void WindowSystem::requestToken(QWindow *window, uint32_t serial, const QString 
         Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, token);
     });
 }
+#endif
 
 void WindowSystem::setCurrentToken(const QString &token)
 {
     m_lastToken = token;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 quint32 WindowSystem::lastInputSerial(QWindow *window)
 {
     auto waylandWindow = window ? dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle()) : nullptr;
@@ -128,6 +131,7 @@ quint32 WindowSystem::lastInputSerial(QWindow *window)
     }
     return waylandWindow->display()->lastInputSerial();
 }
+#endif
 
 WId WindowSystem::activeWindow()
 {

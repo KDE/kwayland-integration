@@ -33,9 +33,9 @@ public:
     void forceActiveWindow(WId win, long time) override;
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void demandAttention(WId win, bool set) override;
-#endif
     void requestToken(QWindow *win, uint32_t serial, const QString &app_id) override;
     quint32 lastInputSerial(QWindow *window) override;
+#endif
     void setCurrentToken(const QString &token) override;
     bool compositingActive() override;
     int currentDesktop() override;
