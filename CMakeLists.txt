@@ -36,12 +36,12 @@ find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 # required frameworks
 find_package(KF${QT_MAJOR_VERSION} ${KF_MIN_VERSION} REQUIRED COMPONENTS
     WindowSystem
-    Wayland
 )
 
 if (QT_MAJOR_VERSION EQUAL "5")
     find_package(QtWaylandScanner REQUIRED)
     find_package(Qt5XkbCommonSupport REQUIRED) # Needed by Qt5::WaylandClientPrivate
+    find_package(KF5Wayland ${KF_MIN_VERSION} REQUIRED)
 endif()
 
 find_package(WaylandProtocols 1.21 REQUIRED)
