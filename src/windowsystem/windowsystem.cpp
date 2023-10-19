@@ -17,6 +17,8 @@
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
+#else
+#include <KWaylandExtras>
 #endif
 
 #include "qwayland-plasma-window-management.h"
@@ -101,7 +103,11 @@ void WindowSystem::requestToken(QWindow *window, uint32_t serial, const QString 
     if (!activation->isActive()) {
         // Ensure that xdgActivationTokenArrived is always emitted asynchronously
         QTimer::singleShot(0, [serial] {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, {});
+#else
+            Q_EMIT KWaylandExtras::self()->xdgActivationTokenArrived(serial, {});
+#endif
         });
         return;
     }
@@ -110,10 +116,18 @@ void WindowSystem::requestToken(QWindow *window, uint32_t serial, const QString 
     auto seat = waylandWindow ? waylandWindow->display()->defaultInputDevice()->wl_seat() : nullptr;
     auto tokenReq = activation->requestXdgActivationToken(seat, wlSurface, serial, app_id);
     connect(tokenReq, &WaylandXdgActivationTokenV1::failed, KWindowSystem::self(), [serial, app_id]() {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, {});
+#else
+        Q_EMIT KWaylandExtras::self()->xdgActivationTokenArrived(serial, {});
+#endif
     });
     connect(tokenReq, &WaylandXdgActivationTokenV1::done, KWindowSystem::self(), [serial](const QString &token) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         Q_EMIT KWindowSystem::self()->xdgActivationTokenArrived(serial, token);
+#else
+        Q_EMIT KWaylandExtras::self()->xdgActivationTokenArrived(serial, token);
+#endif
     });
 }
 
