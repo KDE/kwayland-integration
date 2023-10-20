@@ -9,8 +9,6 @@
 
 #include "windowinfo.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-
 #include "kwindowsystem.h"
 #include "waylandintegration.h"
 
@@ -210,4 +208,3 @@ bool WindowInfo::actionSupported(NET::Action action) const
     Q_UNUSED(action)
     return false;
 }
-#endif

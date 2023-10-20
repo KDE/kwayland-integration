@@ -27,22 +27,20 @@ include(KDEClangFormat)
 include(KDEGitCommitHooks)
 include(ECMDeprecationSettings)
 
-find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Core
     Widgets
     WaylandClient
 )
 
 # required frameworks
-find_package(KF${QT_MAJOR_VERSION} ${KF_MIN_VERSION} REQUIRED COMPONENTS
+find_package(KF5 ${KF_MIN_VERSION} REQUIRED COMPONENTS
     WindowSystem
 )
 
-if (QT_MAJOR_VERSION EQUAL "5")
-    find_package(QtWaylandScanner REQUIRED)
-    find_package(Qt5XkbCommonSupport REQUIRED) # Needed by Qt5::WaylandClientPrivate
-    find_package(KF5Wayland ${KF_MIN_VERSION} REQUIRED)
-endif()
+find_package(QtWaylandScanner REQUIRED)
+find_package(Qt5XkbCommonSupport REQUIRED) # Needed by Qt5::WaylandClientPrivate
+find_package(KF5Wayland ${KF_MIN_VERSION} REQUIRED)
 
 find_package(WaylandProtocols 1.21 REQUIRED)
 find_package(Wayland 1.15 COMPONENTS Client)

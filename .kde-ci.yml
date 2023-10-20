@@ -12,14 +12,3 @@ Dependencies:
     'libraries/plasma-wayland-protocols': '@latest'
     'third-party/wayland': '@latest'
     'third-party/wayland-protocols': '@latest'
-
-- 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
-  'require':
-    'frameworks/extra-cmake-modules': '@latest-kf6'
-    'frameworks/kguiaddons': '@latest-kf6'
-    'frameworks/kidletime': '@latest-kf6'
-    'frameworks/kwayland': '@latest-kf6'
-    'frameworks/kwindowsystem': '@latest-kf6'
-    'libraries/plasma-wayland-protocols': '@latest-kf6'
-    'third-party/wayland': '@latest'
-    'third-party/wayland-protocols': '@latest'

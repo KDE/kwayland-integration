@@ -114,11 +114,7 @@ public:
 
 WindowEffects::WindowEffects()
     : QObject()
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     , KWindowEffectsPrivateV2()
-#else
-    , KWindowEffectsPrivate()
-#endif
 {
     m_blurManager = new BlurManager();
     m_contrastManager = new ContrastManager();
@@ -162,7 +158,6 @@ WindowEffects::~WindowEffects()
     delete m_slideManager;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QWindow *WindowEffects::windowForId(WId wid)
 {
     QWindow *window = nullptr;
@@ -175,7 +170,6 @@ QWindow *WindowEffects::windowForId(WId wid)
     }
     return window;
 }
-#endif
 
 void WindowEffects::trackWindow(QWindow *window)
 {
@@ -284,18 +278,12 @@ bool WindowEffects::isEffectAvailable(KWindowEffects::Effect effect)
     }
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset)
-#else
-void WindowEffects::slideWindow(QWindow *window, KWindowEffects::SlideFromLocation location, int offset)
-#endif
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     auto window = windowForId(id);
     if (!window) {
         return;
     }
-#endif
     if (location != KWindowEffects::SlideFromLocation::NoEdge) {
         m_slideMap[window] = SlideData{
             .location = location,
@@ -346,52 +334,37 @@ void WindowEffects::installSlide(QWindow *window, KWindowEffects::SlideFromLocat
     }
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-
 QList<QSize> WindowEffects::windowSizes(const QList<WId> &ids)
 {
     Q_UNUSED(ids)
     QList<QSize> sizes;
     return sizes;
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::presentWindows(WId controller, const QList<WId> &ids)
 {
     Q_UNUSED(controller)
     Q_UNUSED(ids)
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::presentWindows(WId controller, int desktop)
 {
     Q_UNUSED(controller)
     Q_UNUSED(desktop)
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::highlightWindows(WId controller, const QList<WId> &ids)
 {
     Q_UNUSED(controller)
     Q_UNUSED(ids)
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::enableBlurBehind(WId winId, bool enable, const QRegion &region)
-#else
-void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion &region)
-#endif
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     auto window = windowForId(winId);
     if (!window) {
         return;
     }
-#endif
     if (enable) {
         trackWindow(window);
         m_blurRegions[window] = region;
@@ -430,18 +403,13 @@ void WindowEffects::installBlur(QWindow *window, bool enable, const QRegion &reg
     }
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::enableBackgroundContrast(WId winId, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
-#else
-void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
-#endif
+
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     auto window = windowForId(winId);
     if (!window) {
         return;
     }
-#endif
     if (enable) {
         trackWindow(window);
         m_backgroundConstrastRegions[window].contrast = contrast;
@@ -485,7 +453,6 @@ void WindowEffects::installContrast(QWindow *window, bool enable, qreal contrast
     }
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::setBackgroundFrost(QWindow *window, QColor color, const QRegion &region)
 {
     if (!m_contrastManager->isActive()) {
@@ -513,11 +480,8 @@ void WindowEffects::setBackgroundFrost(QWindow *window, QColor color, const QReg
     wl_region_destroy(wl_region);
     resetContrast(window, backgroundContrast);
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowEffects::markAsDashboard(WId window)
 {
     Q_UNUSED(window)
 }
-#endif

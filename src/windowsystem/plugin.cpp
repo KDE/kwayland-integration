@@ -5,9 +5,7 @@
 */
 #include "plugin.h"
 #include "windoweffects.h"
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include "windowinfo.h"
-#endif
 #include "windowshadow.h"
 #include "windowsystem.h"
 
@@ -30,12 +28,10 @@ KWindowSystemPrivate *KWaylandPlugin::createWindowSystem()
     return new WindowSystem();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 KWindowInfoPrivate *KWaylandPlugin::createWindowInfo(WId window, NET::Properties properties, NET::Properties2 properties2)
 {
     return new WindowInfo(window, properties, properties2);
 }
-#endif
 
 KWindowShadowTilePrivate *KWaylandPlugin::createWindowShadowTile()
 {

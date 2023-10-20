@@ -11,13 +11,11 @@
 
 #include <KWindowSystem>
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
-#endif
 
 #include "qwayland-plasma-window-management.h"
 #include <QGuiApplication>
@@ -138,19 +136,15 @@ WId WindowSystem::activeWindow()
     return 0;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 bool WindowSystem::allowedActionsSupported()
 {
     return false;
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::allowExternalProcessWindowActivation(int pid)
 {
     Q_UNUSED(pid)
 }
-#endif
 
 bool WindowSystem::compositingActive()
 {
@@ -176,14 +170,12 @@ int WindowSystem::currentDesktop()
     return 0;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::demandAttention(WId win, bool set)
 {
     Q_UNUSED(win)
     Q_UNUSED(set)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support demanding attention";
 }
-#endif
 
 QString WindowSystem::desktopName(int desktop)
 {
@@ -192,7 +184,6 @@ QString WindowSystem::desktopName(int desktop)
     return QString();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QPoint WindowSystem::desktopToViewport(int desktop, bool absolute)
 {
     Q_UNUSED(desktop)
@@ -200,23 +191,18 @@ QPoint WindowSystem::desktopToViewport(int desktop, bool absolute)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support viewport positions";
     return QPoint();
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 WId WindowSystem::groupLeader(WId window)
 {
     Q_UNUSED(window)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support group leader";
     return 0;
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 bool WindowSystem::icccmCompliantMappingState()
 {
     return false;
 }
-#endif
 
 QPixmap WindowSystem::icon(WId win, int width, int height, bool scale, int flags)
 {
@@ -229,13 +215,11 @@ QPixmap WindowSystem::icon(WId win, int width, int height, bool scale, int flags
     return QPixmap();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::lowerWindow(WId win)
 {
     Q_UNUSED(win)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support lower window";
 }
-#endif
 
 bool WindowSystem::mapViewport()
 {
@@ -261,13 +245,11 @@ int WindowSystem::numberOfDesktops()
     return 1;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::raiseWindow(WId win)
 {
     Q_UNUSED(win)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support raising windows";
 }
-#endif
 
 QString WindowSystem::readNameProperty(WId window, long unsigned int atom)
 {
@@ -277,14 +259,12 @@ QString WindowSystem::readNameProperty(WId window, long unsigned int atom)
     return QString();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::setBlockingCompositing(WId window, bool active)
 {
     Q_UNUSED(window)
     Q_UNUSED(active)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support blocking compositing";
 }
-#endif
 
 void WindowSystem::setCurrentDesktop(int desktop)
 {
@@ -339,7 +319,6 @@ void WindowSystem::setStrut(WId win, int left, int right, int top, int bottom)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support window struts";
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::setIcons(WId win, const QPixmap &icon, const QPixmap &miniIcon)
 {
     Q_UNUSED(win)
@@ -347,7 +326,6 @@ void WindowSystem::setIcons(WId win, const QPixmap &icon, const QPixmap &miniIco
     Q_UNUSED(miniIcon)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support setting window icons";
 }
-#endif
 
 void WindowSystem::setOnActivities(WId win, const QStringList &activities)
 {
@@ -380,7 +358,6 @@ void WindowSystem::setShowingDesktop(bool showing)
 
 void WindowSystem::clearState(WId win, NET::States state)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Surface *s = Surface::fromQtWinId(win);
     if (!s) {
         return;
@@ -442,14 +419,10 @@ void WindowSystem::clearState(WId win, NET::States state)
     if (state & NET::DemandsAttention) {
         qCDebug(KWAYLAND_KWS) << "This plugin does not support changing DemandsAttention window state";
     }
-#else
-    qCDebug(KWAYLAND_KWS) << "This plugin does not support changing window state";
-#endif
 }
 
 void WindowSystem::setState(WId win, NET::States state)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Surface *s = Surface::fromQtWinId(win);
     if (!s) {
         return;
@@ -511,14 +484,10 @@ void WindowSystem::setState(WId win, NET::States state)
     if (state & NET::DemandsAttention) {
         qCDebug(KWAYLAND_KWS) << "This plugin does not support changing DemandsAttention window state";
     }
-#else
-    qCDebug(KWAYLAND_KWS) << "This plugin does not support changing window state";
-#endif
 }
 
 void WindowSystem::setType(WId win, NET::WindowType windowType)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (!WaylandIntegration::self()->waylandPlasmaShell()) {
         return;
     }
@@ -557,19 +526,14 @@ void WindowSystem::setType(WId win, NET::WindowType windowType)
     KWayland::Client::PlasmaShellSurface *shellSurface = WaylandIntegration::self()->waylandPlasmaShell()->createSurface(s, this);
 
     shellSurface->setRole(role);
-#else
-    qCDebug(KWAYLAND_KWS) << "This plugin does not support setting window type";
-#endif
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void WindowSystem::setUserTime(WId win, long int time)
 {
     Q_UNUSED(win)
     Q_UNUSED(time)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support setting user type";
 }
-#endif
 
 bool WindowSystem::showingDesktop()
 {
@@ -585,23 +549,19 @@ QList<WId> WindowSystem::stackingOrder()
     return QList<WId>();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 WId WindowSystem::transientFor(WId window)
 {
     Q_UNUSED(window)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support transient for windows";
     return 0;
 }
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 int WindowSystem::viewportToDesktop(const QPoint &pos)
 {
     Q_UNUSED(pos)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support viewports";
     return 0;
 }
-#endif
 
 int WindowSystem::viewportWindowToDesktop(const QRect &r)
 {

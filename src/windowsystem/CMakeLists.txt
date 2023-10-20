@@ -1,4 +1,4 @@
-add_library(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin MODULE)
+add_library(KF5WindowSystemKWaylandPlugin MODULE)
 set(wayland_plugin_SRCS
     plugin.cpp
     shm.cpp
@@ -16,61 +16,49 @@ set(wayland_plugin_SRCS
     windowsystem.h
     waylandxdgactivationv1_p.h
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
-        PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
-        BASENAME xdg-activation-v1
-    )
-    ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
-        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/blur.xml
-        BASENAME blur
-    )
-    ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
-        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/contrast.xml
-        BASENAME contrast
-    )
-    ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
-        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/slide.xml
-        BASENAME slide
-    )
-    ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
-        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-window-management.xml
-        BASENAME plasma-window-management
-    )
-    ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
-        PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/shadow.xml
-        BASENAME shadow
-    )
-    ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
-        PROTOCOL ${Wayland_DATADIR}/wayland.xml
-        BASENAME wayland
-    )
-else()
-    qt6_generate_wayland_protocol_client_sources(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin FILES
-        ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/blur.xml
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/contrast.xml
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/slide.xml
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-window-management.xml
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/shadow.xml
-        ${Wayland_DATADIR}/wayland.xml
-    )
+ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
+    BASENAME xdg-activation-v1
+)
+ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/blur.xml
+    BASENAME blur
+)
+ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/contrast.xml
+    BASENAME contrast
+)
+ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/slide.xml
+    BASENAME slide
+)
+ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-window-management.xml
+    BASENAME plasma-window-management
+)
+ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/shadow.xml
+    BASENAME shadow
+)
+ecm_add_qtwayland_client_protocol(wayland_plugin_SRCS
+    PROTOCOL ${Wayland_DATADIR}/wayland.xml
+    BASENAME wayland
+)
 
-endif()
 ecm_qt_declare_logging_category(wayland_plugin_SRCS HEADER logging.h IDENTIFIER KWAYLAND_KWS
     CATEGORY_NAME org.kde.kf5.kwindowsystem.kwayland DEFAULT_SEVERITY Warning
     DESCRIPTION "wayland integration (windowsystem)" EXPORT KWAYLAND)
 
-target_sources(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin PRIVATE ${wayland_plugin_SRCS})
+target_sources(KF5WindowSystemKWaylandPlugin PRIVATE ${wayland_plugin_SRCS})
 
 if(HAVE_MEMFD)
-    target_compile_definitions(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin PRIVATE -DHAVE_MEMFD)
+    target_compile_definitions(KF5WindowSystemKWaylandPlugin PRIVATE -DHAVE_MEMFD)
 endif()
 
 pkg_check_modules(XKBCommon REQUIRED IMPORTED_TARGET xkbcommon)
 
-target_link_libraries(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin
-    KF${QT_MAJOR_VERSION}::WindowSystem
+target_link_libraries(KF5WindowSystemKWaylandPlugin
+    KF5::WindowSystem
     Qt::Widgets
     Wayland::Client
     Qt::WaylandClient
@@ -78,18 +66,16 @@ target_link_libraries(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin
     PkgConfig::XKBCommon
 )
 
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin
-        Qt::XkbCommonSupportPrivate
-        KF5::WaylandClient
-    )
-endif()
+target_link_libraries(KF5WindowSystemKWaylandPlugin
+    Qt::XkbCommonSupportPrivate
+    KF5::WaylandClient
+)
 
 install(
     TARGETS
-        KF${QT_MAJOR_VERSION}WindowSystemKWaylandPlugin
+        KF5WindowSystemKWaylandPlugin
     DESTINATION
-        ${KDE_INSTALL_PLUGINDIR}/kf${QT_MAJOR_VERSION}/kwindowsystem/
+        ${KDE_INSTALL_PLUGINDIR}/kf5/kwindowsystem/
 )
 
 ecm_qt_install_logging_categories(
