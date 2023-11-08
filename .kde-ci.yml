@@ -7,5 +7,5 @@ Dependencies:
     'frameworks/extra-cmake-modules': '@latest'
     'frameworks/kguiaddons': '@latest'
     'frameworks/kidletime': '@latest'
-    'frameworks/kwayland': '@latest'
     'frameworks/kwindowsystem': '@latest'
+    'plasma/kwayland': 'kf5'
