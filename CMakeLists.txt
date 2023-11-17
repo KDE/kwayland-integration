@@ -2,7 +2,7 @@ project(kwayland-integration)
 
 set(CMAKE_C_STANDARD 99)
 
-set(PROJECT_VERSION "5.81.0")
+set(PROJECT_VERSION "5.81.80")
 set(PROJECT_VERSION_MAJOR 6)
 
 cmake_minimum_required(VERSION 3.16)
