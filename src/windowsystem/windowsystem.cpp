@@ -192,12 +192,14 @@ QPoint WindowSystem::desktopToViewport(int desktop, bool absolute)
     return QPoint();
 }
 
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
 WId WindowSystem::groupLeader(WId window)
 {
     Q_UNUSED(window)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support group leader";
     return 0;
 }
+#endif
 
 bool WindowSystem::icccmCompliantMappingState()
 {
@@ -549,12 +551,14 @@ QList<WId> WindowSystem::stackingOrder()
     return QList<WId>();
 }
 
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
 WId WindowSystem::transientFor(WId window)
 {
     Q_UNUSED(window)
     qCDebug(KWAYLAND_KWS) << "This plugin does not support transient for windows";
     return 0;
 }
+#endif
 
 int WindowSystem::viewportToDesktop(const QPoint &pos)
 {
