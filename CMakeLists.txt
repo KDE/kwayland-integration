@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.16)
 project(kwayland-integration)
 
 set(CMAKE_C_STANDARD 99)
@@ -5,7 +6,6 @@ set(CMAKE_C_STANDARD 99)
 set(PROJECT_VERSION "5.90.90")
 set(PROJECT_VERSION_MAJOR 6)
 
-cmake_minimum_required(VERSION 3.16)
 set(QT_MIN_VERSION "5.15.2")
 set(KF_MIN_VERSION "5.102.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
