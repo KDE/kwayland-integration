@@ -34,7 +34,7 @@ class WindowManagement : public QWaylandClientExtensionTemplate<WindowManagement
 {
 public:
     WindowManagement()
-        : QWaylandClientExtensionTemplate<WindowManagement>(16)
+        : QWaylandClientExtensionTemplate<WindowManagement>(17)
     {
     }
 
