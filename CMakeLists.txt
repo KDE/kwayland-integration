@@ -3,7 +3,7 @@ project(kwayland-integration)
 
 set(CMAKE_C_STANDARD 99)
 
-set(PROJECT_VERSION "6.1.90")
+set(PROJECT_VERSION "6.2.80")
 set(PROJECT_VERSION_MAJOR 6)
 
 set(QT_MIN_VERSION "5.15.2")
