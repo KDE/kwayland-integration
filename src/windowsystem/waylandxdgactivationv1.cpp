@@ -10,6 +10,7 @@
 WaylandXdgActivationV1::WaylandXdgActivationV1()
     : QWaylandClientExtensionTemplate<WaylandXdgActivationV1>(1)
 {
+    QMetaObject::invokeMethod(this, "addRegistryListener");
 }
 
 WaylandXdgActivationV1::~WaylandXdgActivationV1()
