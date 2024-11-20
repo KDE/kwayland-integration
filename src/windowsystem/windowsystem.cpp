@@ -61,10 +61,34 @@ WindowSystem::~WindowSystem()
     delete m_windowManagement;
 }
 
+wl_surface *fromQtWinId(WId wid)
+{
+    QWindow *window = nullptr;
+
+    for (auto win : qApp->allWindows()) {
+        if (win->handle() && win->winId() == wid) {
+            window = win;
+            break;
+        }
+    }
+
+    if (!window) {
+        return nullptr;
+    }
+
+    QPlatformNativeInterface *native = qApp->platformNativeInterface();
+    if (!native) {
+        return nullptr;
+    }
+    window->create();
+    wl_surface *s = reinterpret_cast<wl_surface *>(native->nativeResourceForWindow(QByteArrayLiteral("surface"), window));
+    return s;
+}
+
 void WindowSystem::activateWindow(WId win, long int time)
 {
     Q_UNUSED(time);
-    auto s = surfaceForWindow(QWindow::fromWinId(win));
+    auto s = fromQtWinId(win);
     if (!s) {
         return;
     }
